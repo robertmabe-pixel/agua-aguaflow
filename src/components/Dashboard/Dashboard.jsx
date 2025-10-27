@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import CustomerFeedbackWidget from '../CustomerFeedbackWidget';
+import InventoryTracker from '../InventoryTracker';
 import './Dashboard.css';
 
 /**
@@ -15,10 +16,14 @@ import './Dashboard.css';
  */
 const Dashboard = ({
   feedbackApiEndpoint = '/api/feedback',
+  inventoryApiEndpoint = '/api/inventory/real-time',
   className = '',
   showFeedbackWidget = true,
+  showInventoryTracker = true,
   refreshInterval = 300000, // 5 minutes
-  onFeedbackUpdate = null
+  inventoryRefreshInterval = 10000, // 10 seconds
+  onFeedbackUpdate = null,
+  onInventoryUpdate = null
 }) => {
   const [dashboardData, setDashboardData] = useState({
     totalUsers: 0,
@@ -192,6 +197,18 @@ const Dashboard = ({
 
       {/* Main Content Area */}
       <main className="dashboard-content">
+        {/* Real-Time Inventory Tracker */}
+        {showInventoryTracker && (
+          <section className="dashboard-section inventory-section">
+            <InventoryTracker
+              apiEndpoint={inventoryApiEndpoint}
+              refreshInterval={inventoryRefreshInterval}
+              onInventoryUpdate={onInventoryUpdate}
+              className="dashboard-inventory-tracker"
+            />
+          </section>
+        )}
+
         {/* Water Usage Widget Placeholder */}
         <section className="dashboard-section">
           <h2>Water Usage Overview</h2>
@@ -236,14 +253,22 @@ const Dashboard = ({
 Dashboard.propTypes = {
   /** API endpoint for feedback operations */
   feedbackApiEndpoint: PropTypes.string,
+  /** API endpoint for inventory operations */
+  inventoryApiEndpoint: PropTypes.string,
   /** Additional CSS classes */
   className: PropTypes.string,
   /** Whether to show the feedback widget */
   showFeedbackWidget: PropTypes.bool,
-  /** Auto-refresh interval in milliseconds */
+  /** Whether to show the inventory tracker */
+  showInventoryTracker: PropTypes.bool,
+  /** Auto-refresh interval for dashboard data in milliseconds */
   refreshInterval: PropTypes.number,
+  /** Auto-refresh interval for inventory data in milliseconds */
+  inventoryRefreshInterval: PropTypes.number,
   /** Callback function called when feedback is updated */
-  onFeedbackUpdate: PropTypes.func
+  onFeedbackUpdate: PropTypes.func,
+  /** Callback function called when inventory is updated */
+  onInventoryUpdate: PropTypes.func
 };
 
 export default Dashboard;
