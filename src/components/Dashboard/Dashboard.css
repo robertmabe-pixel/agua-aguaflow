@@ -217,6 +217,15 @@
   color: #9ca3af;
 }
 
+/* Sales Analytics Section */
+.sales-analytics-section {
+  margin-bottom: 2rem;
+}
+
+.dashboard-sales-analytics {
+  margin-bottom: 0;
+}
+
 /* Inventory Section */
 .inventory-section {
   background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);

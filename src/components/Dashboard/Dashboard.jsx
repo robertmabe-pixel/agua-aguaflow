@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import CustomerFeedbackWidget from '../CustomerFeedbackWidget';
 import InventoryTracker from '../InventoryTracker';
+import SalesAnalytics from '../SalesAnalytics';
 import './Dashboard.css';
 
 /**
@@ -17,13 +18,17 @@ import './Dashboard.css';
 const Dashboard = ({
   feedbackApiEndpoint = '/api/feedback',
   inventoryApiEndpoint = '/api/inventory/real-time',
+  salesApiEndpoint = '/api/sales/performance',
   className = '',
   showFeedbackWidget = true,
   showInventoryTracker = true,
+  showSalesAnalytics = true,
   refreshInterval = 300000, // 5 minutes
   inventoryRefreshInterval = 10000, // 10 seconds
+  salesRefreshInterval = 60000, // 60 seconds
   onFeedbackUpdate = null,
-  onInventoryUpdate = null
+  onInventoryUpdate = null,
+  onSalesUpdate = null
 }) => {
   const [dashboardData, setDashboardData] = useState({
     totalUsers: 0,
@@ -197,6 +202,18 @@ const Dashboard = ({
 
       {/* Main Content Area */}
       <main className="dashboard-content">
+        {/* Sales Performance Analytics */}
+        {showSalesAnalytics && (
+          <section className="dashboard-section sales-analytics-section">
+            <SalesAnalytics
+              apiEndpoint={salesApiEndpoint}
+              refreshInterval={salesRefreshInterval}
+              onDataUpdate={onSalesUpdate}
+              className="dashboard-sales-analytics"
+            />
+          </section>
+        )}
+
         {/* Real-Time Inventory Tracker */}
         {showInventoryTracker && (
           <section className="dashboard-section inventory-section">
@@ -255,20 +272,28 @@ Dashboard.propTypes = {
   feedbackApiEndpoint: PropTypes.string,
   /** API endpoint for inventory operations */
   inventoryApiEndpoint: PropTypes.string,
+  /** API endpoint for sales performance data */
+  salesApiEndpoint: PropTypes.string,
   /** Additional CSS classes */
   className: PropTypes.string,
   /** Whether to show the feedback widget */
   showFeedbackWidget: PropTypes.bool,
   /** Whether to show the inventory tracker */
   showInventoryTracker: PropTypes.bool,
+  /** Whether to show the sales analytics module */
+  showSalesAnalytics: PropTypes.bool,
   /** Auto-refresh interval for dashboard data in milliseconds */
   refreshInterval: PropTypes.number,
   /** Auto-refresh interval for inventory data in milliseconds */
   inventoryRefreshInterval: PropTypes.number,
+  /** Auto-refresh interval for sales data in milliseconds (default: 60000 = 60 seconds) */
+  salesRefreshInterval: PropTypes.number,
   /** Callback function called when feedback is updated */
   onFeedbackUpdate: PropTypes.func,
   /** Callback function called when inventory is updated */
-  onInventoryUpdate: PropTypes.func
+  onInventoryUpdate: PropTypes.func,
+  /** Callback function called when sales data is updated */
+  onSalesUpdate: PropTypes.func
 };
 
 export default Dashboard;

@@ -14,6 +14,11 @@ function App() {
     // Here you could update global state, show notifications, etc.
   };
 
+  const handleSalesUpdate = (salesData) => {
+    console.log('App received sales data update:', salesData);
+    // Here you could update global state, show notifications, etc.
+  };
+
   return (
     <div className="App">
       {/* Navigation */}
@@ -42,9 +47,13 @@ function App() {
         {currentView === 'dashboard' ? (
           <Dashboard
             feedbackApiEndpoint="/api/feedback"
+            salesApiEndpoint="/api/sales/performance"
             onFeedbackUpdate={handleFeedbackUpdate}
+            onSalesUpdate={handleSalesUpdate}
             showFeedbackWidget={true}
+            showSalesAnalytics={true}
             refreshInterval={300000} // 5 minutes
+            salesRefreshInterval={60000} // 60 seconds
             className="main-dashboard"
           />
         ) : (
