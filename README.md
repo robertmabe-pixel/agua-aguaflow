@@ -1,277 +1,278 @@
-# AguaFlow Frontend Components
+# AguaFlow Water Quality API
 
-A comprehensive React component library for water quality monitoring and usage visualization. Built for environmental monitoring and water management applications.
+A robust Node.js API for ingesting, processing, and managing water quality sensor data. Built for environmental monitoring and water quality assessment applications.
 
 ## 🌊 Features
 
-### WaterUsageWidget Component
-- **Real-time Data Visualization**: Interactive charts showing water usage trends
-- **Daily Averages**: Displays daily usage patterns with statistical analysis
-- **Auto-refresh**: Configurable refresh intervals for live data updates
-- **Statistics Dashboard**: Key metrics including total, average, peak, and minimum usage
-- **Error Handling**: Robust error states with retry functionality
-- **Responsive Design**: Mobile-friendly layout with adaptive styling
-- **Accessibility**: WCAG compliant with proper ARIA labels
-- **Dark Mode Support**: Automatic dark mode detection and styling
-- **Customizable**: Extensive configuration options for styling and behavior
+- **Sensor Data Ingestion**: RESTful endpoints for receiving water quality measurements
+- **Data Validation**: Comprehensive validation of sensor data with quality checks
+- **Real-time Processing**: Immediate processing and quality flagging of incoming data
+- **Alert System**: Configurable alerts for critical water quality conditions
+- **Swagger Documentation**: Complete API documentation with interactive testing
+- **MongoDB Integration**: Efficient data storage with optimized queries
+- **Comprehensive Testing**: Full test suite with Jest and Supertest
+- **Production Ready**: Logging, error handling, and monitoring capabilities
 
-## 📦 Installation
+## 📊 Supported Water Quality Parameters
 
-```bash
-# Clone the repository
-git clone https://github.com/robertmabe-pixel/agua-aguaflow.git
-cd agua-aguaflow
-
-# Install dependencies
-npm install
-
-# Start development server
-npm start
-```
+- **Temperature** (°C)
+- **pH Level** (0-14 scale)
+- **Dissolved Oxygen** (mg/L)
+- **Turbidity** (NTU)
+- **Electrical Conductivity** (µS/cm)
+- **Salinity** (PSU)
 
 ## 🚀 Quick Start
 
-### Basic Usage
+### Prerequisites
 
-```jsx
-import React from 'react';
-import WaterUsageWidget from './components/WaterUsageWidget';
+- Node.js 18.0.0 or higher
+- MongoDB 4.4 or higher
+- npm or yarn package manager
 
-function App() {
-  return (
-    <div className="App">
-      <WaterUsageWidget />
-    </div>
-  );
-}
+### Installation
 
-export default App;
-```
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/robertmabe-pixel/agua-aguaflow.git
+   cd agua-aguaflow
+   ```
 
-### Advanced Configuration
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-```jsx
-import React from 'react';
-import WaterUsageWidget from './components/WaterUsageWidget';
+3. **Set up environment variables**
+   ```bash
+   cp .env.example .env
+   # Edit .env with your configuration
+   ```
 
-function Dashboard() {
-  const chartConfig = {
-    strokeWidth: 3,
-    strokeColor: '#0066cc',
-    gridColor: '#f0f0f0'
-  };
+4. **Start MongoDB**
+   ```bash
+   # Using Docker
+   docker run -d -p 27017:27017 --name mongodb mongo:latest
+   
+   # Or start your local MongoDB service
+   sudo systemctl start mongod
+   ```
 
-  return (
-    <WaterUsageWidget
-      apiEndpoint="/api/v1/water-usage"
-      refreshInterval={60000} // 1 minute
-      daysToShow={14}
-      className="dashboard-widget"
-      chartConfig={chartConfig}
-    />
-  );
-}
-```
+5. **Start the development server**
+   ```bash
+   npm run dev
+   ```
 
-## 📊 Component Props
+6. **Access the API**
+   - API Base URL: `http://localhost:3000`
+   - Swagger Documentation: `http://localhost:3000/api-docs`
+   - Health Check: `http://localhost:3000/health`
 
-### WaterUsageWidget
+## 📚 API Documentation
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `apiEndpoint` | `string` | `'/api/water-usage'` | API endpoint URL for fetching data |
-| `refreshInterval` | `number` | `300000` | Auto-refresh interval in milliseconds |
-| `daysToShow` | `number` | `7` | Number of days to display |
-| `className` | `string` | `''` | Additional CSS classes |
-| `chartConfig` | `object` | `{}` | Chart styling configuration |
+### Core Endpoints
 
-## 🔌 API Integration
+#### Ingest Sensor Data
+```http
+POST /api/v1/water-quality/ingest
+Content-Type: application/json
 
-The component expects the API to return data in this format:
-
-```json
 {
-  "success": true,
-  "data": [
-    {
-      "date": "2025-10-26T00:00:00.000Z",
-      "dailyUsage": 150.5,
-      "dailyAverage": 145.2
-    },
-    {
-      "date": "2025-10-27T00:00:00.000Z", 
-      "dailyUsage": 162.3,
-      "dailyAverage": 148.7
-    }
-  ]
-}
-```
-
-## 🧪 Testing
-
-```bash
-# Run all tests
-npm test
-
-# Run tests with coverage
-npm run test:coverage
-
-# Run tests in watch mode
-npm test -- --watch
-```
-
-### Test Coverage
-
-The component includes comprehensive tests covering:
-- ✅ Component rendering and props
-- ✅ Data fetching and API integration
-- ✅ Error handling and retry functionality
-- ✅ User interactions (refresh, retry)
-- ✅ Statistics calculations
-- ✅ Chart rendering
-- ✅ Auto-refresh functionality
-- ✅ Accessibility features
-
-## 🎨 Styling
-
-### CSS Classes
-
-```css
-.water-usage-widget          /* Main container */
-.widget-header              /* Header section */
-.usage-statistics           /* Statistics grid */
-.chart-container            /* Chart wrapper */
-.chart-legend              /* Legend section */
-```
-
-### Custom Styling Example
-
-```css
-.my-custom-widget {
-  border: 2px solid #0066cc;
-  border-radius: 16px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-}
-
-.my-custom-widget .widget-header h3 {
-  color: #0066cc;
-  font-size: 1.75rem;
-}
-```
-
-## 📱 Responsive Design
-
-The component is fully responsive and adapts to different screen sizes:
-
-- **Desktop**: Full-featured layout with all statistics
-- **Tablet**: Optimized grid layout for medium screens
-- **Mobile**: Stacked layout with touch-friendly interactions
-
-## ♿ Accessibility
-
-- **WCAG 2.1 AA Compliant**: Meets accessibility standards
-- **Keyboard Navigation**: Full keyboard support
-- **Screen Reader Support**: Proper ARIA labels and descriptions
-- **High Contrast**: Supports high contrast mode
-- **Focus Management**: Clear focus indicators
-
-## 🌙 Dark Mode
-
-Automatic dark mode detection and styling:
-
-```css
-@media (prefers-color-scheme: dark) {
-  .water-usage-widget {
-    background: #1f2937;
-    color: #f9fafb;
+  "sensorId": "WQ-001-PIER-A",
+  "timestamp": "2025-10-26T20:30:00.000Z",
+  "location": {
+    "latitude": 37.7749,
+    "longitude": -122.4194,
+    "depth": 2.5
+  },
+  "measurements": {
+    "temperature": 18.5,
+    "ph": 7.2,
+    "dissolvedOxygen": 8.3,
+    "turbidity": 1.2,
+    "conductivity": 450,
+    "salinity": 0.3
   }
 }
 ```
 
-## 📈 Performance
+#### Get Latest Sensor Data
+```http
+GET /api/v1/water-quality/sensors/{sensorId}/latest
+```
 
-- **Memoized Calculations**: Statistics calculated using `useMemo`
-- **Efficient Re-renders**: Only re-renders when necessary
-- **Lazy Loading**: Chart components loaded only when needed
-- **Debounced Refresh**: Prevents excessive API calls
+#### List All Sensors
+```http
+GET /api/v1/water-quality/sensors
+```
 
-## 🔧 Development
+### Interactive Documentation
 
-### Project Structure
+Visit `http://localhost:3000/api-docs` for complete interactive API documentation with:
+- Request/response schemas
+- Parameter validation rules
+- Example requests and responses
+- Try-it-out functionality
+
+## 🧪 Testing
+
+### Run Tests
+```bash
+# Run all tests
+npm test
+
+# Run tests in watch mode
+npm run test:watch
+
+# Run tests with coverage
+npm run test:coverage
+```
+
+### Test Coverage
+The test suite covers:
+- ✅ API endpoint functionality
+- ✅ Data validation and error handling
+- ✅ Quality check algorithms
+- ✅ Database operations
+- ✅ Alert condition detection
+
+## 🏗️ Project Structure
 
 ```
 src/
-├── components/
-│   └── WaterUsageWidget/
-│       ├── WaterUsageWidget.jsx
-│       ├── WaterUsageWidget.css
-│       ├── __tests__/
-│       │   └── WaterUsageWidget.test.jsx
-│       ├── index.js
-│       └── README.md
-├── examples/
-│   └── WaterUsageWidgetExample.jsx
-└── setupTests.js
+├── config/          # Configuration files
+│   ├── database.js  # MongoDB connection setup
+│   └── swagger.js   # API documentation configuration
+├── models/          # Database models
+│   └── WaterQualityData.js
+├── routes/          # API route definitions
+│   └── waterQuality.js
+├── services/        # Business logic
+│   └── waterQualityService.js
+├── utils/           # Utility functions
+│   └── logger.js    # Winston logging configuration
+└── server.js        # Application entry point
+
+tests/               # Test files
+├── waterQuality.test.js
+└── ...
+
+logs/                # Application logs (auto-created)
+├── combined.log
+└── error.log
 ```
 
-### Available Scripts
+## 🔧 Configuration
 
-```bash
-npm start          # Start development server
-npm test           # Run tests
-npm run build      # Build for production
-npm run lint       # Run ESLint
-npm run lint:fix   # Fix ESLint issues
+### Environment Variables
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `PORT` | Server port | `3000` |
+| `NODE_ENV` | Environment mode | `development` |
+| `MONGODB_URI` | MongoDB connection string | `mongodb://localhost:27017/aguaflow` |
+| `LOG_LEVEL` | Logging level | `info` |
+| `API_BASE_URL` | Base URL for API documentation | `http://localhost:3000` |
+
+### Quality Check Thresholds
+
+The API automatically flags data that falls outside these ranges:
+
+| Parameter | Normal Range | Alert Threshold |
+|-----------|--------------|-----------------|
+| Temperature | 0-40°C | Outside range |
+| pH | 6.0-9.0 | < 5.0 or > 10.0 |
+| Dissolved Oxygen | > 2.0 mg/L | < 1.0 mg/L (critical) |
+| Turbidity | < 10 NTU | > 10 NTU |
+
+## 🚨 Alert System
+
+The API includes an intelligent alert system that:
+
+- **Quality Flags**: Automatically flags measurements outside normal ranges
+- **Critical Alerts**: Triggers immediate alerts for dangerous conditions
+- **Extensible**: Easy to add custom alert conditions and notification channels
+
+### Alert Levels
+
+- **Info**: Data outside typical ranges but not dangerous
+- **Warning**: Conditions that may indicate environmental stress
+- **Critical**: Immediate attention required (e.g., very low oxygen levels)
+
+## 📈 Monitoring & Logging
+
+### Logging
+- **Winston** for structured logging
+- **Morgan** for HTTP request logging
+- Separate log files for errors and combined logs
+- Configurable log levels
+
+### Health Monitoring
+- Health check endpoint at `/health`
+- Database connection monitoring
+- Graceful shutdown handling
+
+## 🔒 Security Features
+
+- **Helmet.js** for security headers
+- **CORS** configuration
+- **Request validation** with Joi
+- **Rate limiting** ready for implementation
+- **API key authentication** ready for implementation
+
+## 🚀 Deployment
+
+### Production Checklist
+
+1. **Environment Setup**
+   - Set `NODE_ENV=production`
+   - Configure production MongoDB URI
+   - Set up proper logging levels
+   - Configure security headers
+
+2. **Database**
+   - Set up MongoDB replica set for high availability
+   - Configure database indexes for performance
+   - Set up automated backups
+
+3. **Monitoring**
+   - Set up application monitoring (New Relic, DataDog, etc.)
+   - Configure error tracking (Sentry)
+   - Set up log aggregation
+
+4. **Security**
+   - Enable API key authentication
+   - Set up rate limiting
+   - Configure HTTPS/TLS
+   - Set up firewall rules
+
+### Docker Deployment
+
+```dockerfile
+# Dockerfile example
+FROM node:18-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
+COPY src/ ./src/
+EXPOSE 3000
+CMD ["npm", "start"]
 ```
-
-## 🚨 Troubleshooting
-
-### Common Issues
-
-1. **Chart Not Rendering**
-   - Ensure `recharts` is installed: `npm install recharts`
-   - Check browser console for errors
-
-2. **API Connection Issues**
-   - Verify API endpoint is accessible
-   - Check CORS configuration
-   - Validate API response format
-
-3. **Styling Issues**
-   - Ensure CSS is imported
-   - Check for CSS conflicts
-   - Verify responsive breakpoints
-
-## 📋 Examples
-
-See `src/examples/WaterUsageWidgetExample.jsx` for comprehensive usage examples including:
-
-- Basic usage
-- Custom API endpoints
-- Fast refresh configurations
-- Custom styling
-- Monthly views
-- Compact versions
-
-## 🗺️ Roadmap
-
-### Planned Features
-- **Real-time WebSocket Support**: Live data streaming
-- **Export Functionality**: CSV/PDF export capabilities
-- **Comparison Mode**: Compare usage across time periods
-- **Alerts Integration**: Visual alerts for usage thresholds
-- **Additional Chart Types**: Bar charts, pie charts, heatmaps
 
 ## 🤝 Contributing
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Make your changes
-4. Add tests for new functionality
-5. Ensure all tests pass (`npm test`)
-6. Commit your changes (`git commit -m 'Add amazing feature'`)
-7. Push to the branch (`git push origin feature/amazing-feature`)
-8. Open a Pull Request
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+### Development Guidelines
+
+- Follow ESLint configuration
+- Write tests for new features
+- Update documentation for API changes
+- Use conventional commit messages
 
 ## 📄 License
 
@@ -279,11 +280,31 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🆘 Support
 
-- **Documentation**: Component README files and inline comments
+- **Documentation**: Visit `/api-docs` for interactive API documentation
 - **Issues**: Report bugs and feature requests on GitHub Issues
-- **Email**: frontend-support@agua.com
+- **Email**: api-support@agua.com
+
+## 🗺️ Roadmap
+
+### Phase 1 (Current)
+- ✅ Core API endpoints
+- ✅ Data validation and quality checks
+- ✅ Swagger documentation
+- ✅ Comprehensive testing
+
+### Phase 2 (Next)
+- 🔄 Real-time data streaming (WebSockets)
+- 🔄 Advanced analytics and reporting
+- 🔄 Multi-tenant support
+- 🔄 Enhanced alert system with notifications
+
+### Phase 3 (Future)
+- 📋 Machine learning for anomaly detection
+- 📋 Data visualization dashboard
+- 📋 Mobile app integration
+- 📋 IoT device management
 
 ---
 
-**Built with ❤️ for better water usage monitoring and environmental awareness.**
+**Built with ❤️ by the Agua Inc. team for better water quality monitoring.**
 
