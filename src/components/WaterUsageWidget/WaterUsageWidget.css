@@ -1,0 +1,355 @@
+/* Water Usage Widget Styles */
+
+.water-usage-widget {
+  background-color: var(--color-bg-card);
+  border: 1px solid var(--color-border-primary);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: 1.5rem;
+  transition: all var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+}
+
+.water-usage-widget:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+/* Header */
+.water-usage-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+}
+
+.header-content {
+  flex: 1;
+}
+
+.water-usage-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0 0 0.25rem 0;
+  line-height: 1.4;
+}
+
+.last-updated {
+  font-size: 0.75rem;
+  color: var(--color-text-tertiary);
+  margin: 0;
+}
+
+.refresh-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  background-color: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: var(--radius-md);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.refresh-button:hover:not(:disabled) {
+  background-color: var(--color-bg-tertiary);
+  border-color: var(--color-border-secondary);
+  color: var(--color-text-primary);
+  transform: translateY(-1px);
+}
+
+.refresh-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.refresh-icon {
+  font-size: 0.875rem;
+  line-height: 1;
+  transition: transform var(--transition-normal);
+}
+
+.refresh-icon.spinning {
+  animation: spin 1s linear infinite;
+}
+
+/* Statistics */
+.water-usage-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background-color: var(--color-bg-secondary);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border-primary);
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.25rem;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.stat-value {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  line-height: 1.2;
+}
+
+/* Chart Container */
+.water-usage-chart-container {
+  margin-bottom: 1.5rem;
+  background-color: var(--color-chart-bg);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  border: 1px solid var(--color-border-primary);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Loading State */
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 400px;
+  gap: 1rem;
+  color: var(--color-text-secondary);
+}
+
+.loading-spinner {
+  position: relative;
+}
+
+.spinner {
+  width: 2rem;
+  height: 2rem;
+  border: 2px solid var(--color-border-primary);
+  border-top: 2px solid var(--color-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* Error State */
+.water-usage-widget.error {
+  border-color: var(--color-error);
+}
+
+.water-usage-error {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  background-color: var(--color-error-light);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-error);
+}
+
+.error-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.error-content {
+  flex: 1;
+}
+
+.error-content h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-error);
+  margin: 0 0 0.5rem 0;
+}
+
+.error-content p {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  margin: 0 0 1rem 0;
+}
+
+.retry-button {
+  background-color: var(--color-error);
+  color: var(--color-text-inverse);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.retry-button:hover:not(:disabled) {
+  background-color: var(--color-error);
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.retry-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Daily Average Section */
+.daily-average-section {
+  border-top: 1px solid var(--color-border-primary);
+  padding-top: 1.5rem;
+}
+
+.section-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0 0 1rem 0;
+}
+
+.daily-average-chart {
+  background-color: var(--color-chart-bg);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  border: 1px solid var(--color-border-primary);
+}
+
+/* Tooltip */
+.water-usage-tooltip {
+  z-index: 1000;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .water-usage-widget {
+    padding: 1rem;
+  }
+  
+  .water-usage-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  
+  .water-usage-stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+    padding: 0.75rem;
+  }
+  
+  .stat-item {
+    gap: 0.125rem;
+  }
+  
+  .stat-label {
+    font-size: 0.6875rem;
+  }
+  
+  .stat-value {
+    font-size: 1rem;
+  }
+  
+  .water-usage-chart-container,
+  .daily-average-chart {
+    padding: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .water-usage-widget {
+    padding: 0.75rem;
+  }
+  
+  .water-usage-title {
+    font-size: 1.125rem;
+  }
+  
+  .water-usage-stats {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+  
+  .stat-item {
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: left;
+  }
+  
+  .loading-state {
+    height: 300px;
+  }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  .water-usage-widget {
+    border-width: 2px;
+  }
+  
+  .water-usage-stats,
+  .water-usage-chart-container,
+  .daily-average-chart {
+    border-width: 2px;
+  }
+  
+  .refresh-button {
+    border-width: 2px;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .water-usage-widget,
+  .refresh-button,
+  .retry-button,
+  .refresh-icon {
+    transition: none;
+  }
+  
+  .water-usage-widget:hover {
+    transform: none;
+  }
+  
+  .refresh-button:hover:not(:disabled) {
+    transform: none;
+  }
+  
+  .spinner,
+  .refresh-icon.spinning {
+    animation: none;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .water-usage-widget {
+    box-shadow: none;
+    border: 1px solid #000;
+    break-inside: avoid;
+  }
+  
+  .refresh-button {
+    display: none;
+  }
+  
+  .water-usage-chart-container,
+  .daily-average-chart {
+    background-color: white !important;
+  }
+}

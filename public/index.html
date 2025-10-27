@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="AguaFlow - Water Quality Monitoring Dashboard with Dark Mode Support"
+    />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <title>AguaFlow Portal - Water Quality Monitoring</title>
+    
+    <!-- Preload critical CSS custom properties for faster theme switching -->
+    <style>
+      /* Critical theme variables for initial render */
+      :root {
+        --color-bg-primary: #ffffff;
+        --color-text-primary: #1e293b;
+        --transition-normal: 250ms ease-in-out;
+      }
+      
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme]) {
+          --color-bg-primary: #0f172a;
+          --color-text-primary: #f8fafc;
+        }
+      }
+      
+      /* Prevent flash of unstyled content */
+      body {
+        background-color: var(--color-bg-primary);
+        color: var(--color-text-primary);
+        transition: background-color var(--transition-normal), color var(--transition-normal);
+      }
+    </style>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+  </body>
+</html>
