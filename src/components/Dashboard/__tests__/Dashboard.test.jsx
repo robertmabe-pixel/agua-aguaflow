@@ -19,6 +19,22 @@ jest.mock('../../CustomerFeedbackWidget', () => {
   };
 });
 
+// Mock the InventoryTracker component
+jest.mock('../../InventoryTracker', () => {
+  return function MockInventoryTracker({ onInventoryUpdate, className }) {
+    return (
+      <div data-testid="inventory-tracker" className={className}>
+        <h2>Real-Time Inventory Tracker</h2>
+        <button 
+          onClick={() => onInventoryUpdate?.([{ id: 1, category: 'Test', items: [] }])}
+        >
+          Mock Update Inventory
+        </button>
+      </div>
+    );
+  };
+});
+
 // Mock fetch globally
 global.fetch = jest.fn();
 
@@ -425,6 +441,79 @@ describe('Dashboard', () => {
         expect(screen.getByRole('banner')).toBeInTheDocument(); // header
         expect(screen.getByRole('main')).toBeInTheDocument(); // main content
         expect(screen.getByRole('contentinfo')).toBeInTheDocument(); // footer
+      });
+    });
+  });
+
+  describe('Inventory Tracker Integration', () => {
+    test('renders inventory tracker by default', async () => {
+      fetch.mockResolvedValue({
+        ok: true,
+        json: async () => mockFeedbackData
+      });
+
+      render(<Dashboard />);
+
+      await waitFor(() => {
+        expect(screen.getByTestId('inventory-tracker')).toBeInTheDocument();
+        expect(screen.getByText('Real-Time Inventory Tracker')).toBeInTheDocument();
+      });
+    });
+
+    test('hides inventory tracker when showInventoryTracker is false', async () => {
+      fetch.mockResolvedValue({
+        ok: true,
+        json: async () => mockFeedbackData
+      });
+
+      render(<Dashboard showInventoryTracker={false} />);
+
+      await waitFor(() => {
+        expect(screen.getByText('AguaFlow Dashboard')).toBeInTheDocument();
+      });
+
+      expect(screen.queryByTestId('inventory-tracker')).not.toBeInTheDocument();
+    });
+
+    test('passes correct props to inventory tracker', async () => {
+      fetch.mockResolvedValue({
+        ok: true,
+        json: async () => mockFeedbackData
+      });
+
+      const mockInventoryUpdate = jest.fn();
+      render(
+        <Dashboard 
+          inventoryApiEndpoint="/custom/inventory/endpoint"
+          inventoryRefreshInterval={5000}
+          onInventoryUpdate={mockInventoryUpdate}
+        />
+      );
+
+      await waitFor(() => {
+        expect(screen.getByTestId('inventory-tracker')).toBeInTheDocument();
+      });
+
+      // Test callback functionality
+      const updateButton = screen.getByText('Mock Update Inventory');
+      await userEvent.click(updateButton);
+
+      expect(mockInventoryUpdate).toHaveBeenCalledWith([
+        { id: 1, category: 'Test', items: [] }
+      ]);
+    });
+
+    test('applies correct CSS classes to inventory tracker', async () => {
+      fetch.mockResolvedValue({
+        ok: true,
+        json: async () => mockFeedbackData
+      });
+
+      render(<Dashboard />);
+
+      await waitFor(() => {
+        const inventoryTracker = screen.getByTestId('inventory-tracker');
+        expect(inventoryTracker).toHaveClass('dashboard-inventory-tracker');
       });
     });
   });
