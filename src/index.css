@@ -1,5 +1,57 @@
 /* Global styles and CSS reset */
 
+/* CSS Custom Properties for Theme Support */
+:root {
+  /* Light theme colors */
+  --color-bg-primary: #f8fafc;
+  --color-bg-secondary: #ffffff;
+  --color-bg-tertiary: #f9fafb;
+  --color-text-primary: #1f2937;
+  --color-text-secondary: #6b7280;
+  --color-text-tertiary: #9ca3af;
+  --color-border-primary: #e5e7eb;
+  --color-border-secondary: #d1d5db;
+  --color-border-tertiary: #9ca3af;
+  --color-accent-primary: #3b82f6;
+  --color-accent-hover: #2563eb;
+  --color-accent-focus: rgba(59, 130, 246, 0.3);
+  --color-shadow: rgba(0, 0, 0, 0.1);
+}
+
+/* Dark theme colors */
+.theme-dark {
+  --color-bg-primary: #111827;
+  --color-bg-secondary: #1f2937;
+  --color-bg-tertiary: #374151;
+  --color-text-primary: #f9fafb;
+  --color-text-secondary: #d1d5db;
+  --color-text-tertiary: #9ca3af;
+  --color-border-primary: #374151;
+  --color-border-secondary: #4b5563;
+  --color-border-tertiary: #6b7280;
+  --color-accent-primary: #3b82f6;
+  --color-accent-hover: #60a5fa;
+  --color-accent-focus: rgba(59, 130, 246, 0.3);
+  --color-shadow: rgba(0, 0, 0, 0.3);
+}
+
+/* Light theme explicit class (for consistency) */
+.theme-light {
+  --color-bg-primary: #f8fafc;
+  --color-bg-secondary: #ffffff;
+  --color-bg-tertiary: #f9fafb;
+  --color-text-primary: #1f2937;
+  --color-text-secondary: #6b7280;
+  --color-text-tertiary: #9ca3af;
+  --color-border-primary: #e5e7eb;
+  --color-border-secondary: #d1d5db;
+  --color-border-tertiary: #9ca3af;
+  --color-accent-primary: #3b82f6;
+  --color-accent-hover: #2563eb;
+  --color-accent-focus: rgba(59, 130, 246, 0.3);
+  --color-shadow: rgba(0, 0, 0, 0.1);
+}
+
 * {
   box-sizing: border-box;
 }
@@ -11,9 +63,10 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: #f8fafc;
-  color: #1f2937;
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
   line-height: 1.6;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 code {
@@ -38,7 +91,7 @@ input, textarea, select {
 
 /* Focus styles for accessibility */
 *:focus {
-  outline: 2px solid #3b82f6;
+  outline: 2px solid var(--color-accent-primary);
   outline-offset: 2px;
 }
 
@@ -49,16 +102,8 @@ input, textarea, select {
 
 /* Ensure focus is visible for keyboard users */
 *:focus-visible {
-  outline: 2px solid #3b82f6;
+  outline: 2px solid var(--color-accent-primary);
   outline-offset: 2px;
-}
-
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
-  body {
-    background: #111827;
-    color: #f9fafb;
-  }
 }
 
 /* High contrast mode */
@@ -77,6 +122,10 @@ input, textarea, select {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+  
+  body {
+    transition: none;
   }
 }
 

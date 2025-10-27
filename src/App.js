@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Dashboard from './components/Dashboard';
 import CustomerFeedbackExample from './examples/CustomerFeedbackExample';
+import DarkModeToggle from './components/DarkModeToggle/DarkModeToggle';
 import './App.css';
 
 /**
@@ -38,6 +39,7 @@ function App() {
             >
               Examples
             </button>
+            <DarkModeToggle />
           </div>
         </div>
       </nav>
