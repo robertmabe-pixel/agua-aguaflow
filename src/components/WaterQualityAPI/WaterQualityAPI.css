@@ -450,3 +450,278 @@
     display: none;
   }
 }
+
+/* Forecast Section Styles */
+.forecast-section {
+  margin-bottom: 32px;
+  background: #f8fafc;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.forecast-section h3 {
+  margin: 0 0 20px 0;
+  color: #1f2937;
+  font-size: 1.25rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.forecast-section h3::before {
+  content: "🔮";
+  font-size: 1.5rem;
+}
+
+.forecast-summary {
+  margin-bottom: 24px;
+}
+
+.forecast-trend {
+  background: white;
+  border-radius: 8px;
+  padding: 16px;
+  border: 1px solid #e5e7eb;
+}
+
+.forecast-trend h4 {
+  margin: 0 0 12px 0;
+  color: #374151;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.trend-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+.trend-indicator.improving {
+  background: #d1fae5;
+  color: #065f46;
+  border: 1px solid #10b981;
+}
+
+.trend-indicator.declining {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #ef4444;
+}
+
+.trend-indicator.stable {
+  background: #e0e7ff;
+  color: #3730a3;
+  border: 1px solid #6366f1;
+}
+
+.trend-icon {
+  font-size: 1.2rem;
+}
+
+.trend-text {
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.forecast-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 12px;
+}
+
+.forecast-stats p {
+  margin: 0;
+  font-size: 0.875rem;
+  color: #6b7280;
+  background: #f9fafb;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+}
+
+.forecast-stats strong {
+  color: #1f2937;
+  font-weight: 600;
+}
+
+.forecast-chart {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  border: 1px solid #e5e7eb;
+}
+
+.forecast-chart h4 {
+  margin: 0 0 16px 0;
+  color: #374151;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.forecast-timeline {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 16px 0;
+}
+
+.forecast-day {
+  flex: 0 0 auto;
+  text-align: center;
+  min-width: 80px;
+}
+
+.forecast-date {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.forecast-value {
+  position: relative;
+  height: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.quality-bar {
+  width: 24px;
+  border-radius: 4px 4px 0 0;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.quality-bar.excellent {
+  background: linear-gradient(to top, #10b981, #34d399);
+}
+
+.quality-bar.good {
+  background: linear-gradient(to top, #3b82f6, #60a5fa);
+}
+
+.quality-bar.fair {
+  background: linear-gradient(to top, #f59e0b, #fbbf24);
+}
+
+.quality-bar.poor {
+  background: linear-gradient(to top, #ef4444, #f87171);
+}
+
+.quality-number {
+  position: absolute;
+  bottom: -20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #374151;
+  white-space: nowrap;
+}
+
+.confidence-range {
+  font-size: 0.625rem;
+  color: #9ca3af;
+  margin-top: 4px;
+}
+
+.forecast-metadata {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #e5e7eb;
+  text-align: center;
+}
+
+.forecast-metadata small {
+  color: #6b7280;
+  font-size: 0.75rem;
+}
+
+/* Forecast Responsive Design */
+@media (max-width: 768px) {
+  .forecast-section {
+    padding: 16px;
+  }
+  
+  .forecast-stats {
+    grid-template-columns: 1fr;
+  }
+  
+  .forecast-timeline {
+    gap: 8px;
+  }
+  
+  .forecast-day {
+    min-width: 60px;
+  }
+  
+  .forecast-value {
+    height: 80px;
+  }
+  
+  .quality-bar {
+    width: 20px;
+  }
+}
+
+/* Dark Mode Support for Forecast */
+@media (prefers-color-scheme: dark) {
+  .forecast-section {
+    background: #374151;
+    border-color: #4b5563;
+    color: #f9fafb;
+  }
+  
+  .forecast-section h3 {
+    color: #f9fafb;
+  }
+  
+  .forecast-trend {
+    background: #4b5563;
+    border-color: #6b7280;
+  }
+  
+  .forecast-trend h4 {
+    color: #f9fafb;
+  }
+  
+  .forecast-stats p {
+    background: #6b7280;
+    border-color: #9ca3af;
+    color: #f9fafb;
+  }
+  
+  .forecast-stats strong {
+    color: #f9fafb;
+  }
+  
+  .forecast-chart {
+    background: #4b5563;
+    border-color: #6b7280;
+  }
+  
+  .forecast-chart h4 {
+    color: #f9fafb;
+  }
+  
+  .quality-number {
+    color: #f9fafb;
+  }
+  
+  .forecast-metadata {
+    border-top-color: #6b7280;
+  }
+  
+  .forecast-metadata small {
+    color: #d1d5db;
+  }
+}

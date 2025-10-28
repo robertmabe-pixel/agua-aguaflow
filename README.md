@@ -23,6 +23,21 @@ A comprehensive React component library for water quality monitoring, usage visu
 - **Auto-refresh**: Configurable refresh intervals
 - **Error Handling**: Graceful error states with retry functionality
 
+### WaterQualityAPI Component ⭐ ENHANCED
+- **Real-time Water Quality Monitoring**: Live sensor data from multiple regions
+- **7-Day Predictive Forecasting**: AI-powered water quality predictions ⭐ NEW
+- **Trend Analysis**: Automatic trend detection (improving/stable/declining) ⭐ NEW
+- **Interactive Data Visualization**: Charts and graphs for quality metrics
+- **Regional Filtering**: Filter data by geographic regions
+- **Batch Summaries**: Aggregated data summaries with timestamps
+- **Confidence Intervals**: Statistical confidence bounds for forecasts ⭐ NEW
+- **Caching System**: 1-hour cache for improved performance ⭐ NEW
+- **Auto-refresh**: Configurable refresh intervals for live data updates
+- **Error Handling**: Robust error states with retry functionality
+- **Responsive Design**: Mobile-friendly layout with adaptive styling
+- **Accessibility**: WCAG compliant with proper ARIA labels
+- **Dark Mode Support**: Automatic dark mode detection and styling
+
 ### WaterUsageWidget Component
 - **Real-time Data Visualization**: Interactive charts showing water usage trends
 - **Daily Averages**: Displays daily usage patterns with statistical analysis
@@ -100,6 +115,43 @@ function App() {
 export default App;
 ```
 
+### Water Quality API with Forecasting ⭐ NEW
+
+```jsx
+import React from 'react';
+import WaterQualityAPI from './components/WaterQualityAPI';
+
+function WaterQualityDashboard() {
+  const handleDataUpdate = (data) => {
+    console.log('Water quality data:', data);
+    
+    // Handle forecast data
+    if (data.forecast) {
+      console.log('7-day forecast:', data.forecast.forecast_quality_index);
+      console.log('Trend:', data.forecast.trend);
+      
+      // Alert on declining trend
+      if (data.forecast.trend === 'declining') {
+        console.warn('Water quality declining trend detected!');
+      }
+    }
+  };
+
+  return (
+    <WaterQualityAPI
+      apiEndpoint="/api/water-quality"
+      enableForecasting={true}
+      refreshInterval={30000} // 30 seconds
+      showFilters={true}
+      showBatchSummaries={true}
+      defaultRegion="North Coast"
+      onDataUpdate={handleDataUpdate}
+      className="water-quality-dashboard"
+    />
+  );
+}
+```
+
 ### Water Usage Widget
 
 ```jsx
@@ -148,6 +200,22 @@ function Dashboard() {
 | `showFeedbackWidget` | `boolean` | `true` | Whether to show the feedback widget |
 | `refreshInterval` | `number` | `300000` | Auto-refresh interval in milliseconds |
 | `onFeedbackUpdate` | `function` | `null` | Callback function called when feedback is updated |
+
+### WaterQualityAPI ⭐ ENHANCED
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `apiEndpoint` | `string` | `'/api/water-quality'` | API endpoint URL for fetching data |
+| `refreshInterval` | `number` | `30000` | Auto-refresh interval in milliseconds |
+| `autoRefresh` | `boolean` | `true` | Enable/disable auto-refresh |
+| `enableForecasting` | `boolean` | `true` | Enable/disable forecasting functionality ⭐ NEW |
+| `showFilters` | `boolean` | `true` | Show/hide filter controls |
+| `showBatchSummaries` | `boolean` | `true` | Show/hide batch summaries |
+| `defaultRegion` | `string` | `'all'` | Default region filter |
+| `defaultDateRange` | `object` | `{ start: null, end: null }` | Default date range filter |
+| `onDataUpdate` | `function` | `null` | Callback when data (including forecast) is updated |
+| `onError` | `function` | `null` | Callback when an error occurs |
+| `className` | `string` | `''` | Additional CSS classes |
 
 ### WaterUsageWidget
 
@@ -203,6 +271,62 @@ Retrieve aggregated feedback data
   }
 }
 ```
+
+### Water Quality API ⭐ ENHANCED
+
+The WaterQualityAPI component supports predictive forecasting with the `?forecast=true` parameter.
+
+#### GET `/api/water-quality?forecast=true`
+
+**Query Parameters:**
+- `forecast=true` - Enable 7-day forecasting ⭐ NEW
+- `region` - Filter by specific region
+- `start_date` - Start date for historical data
+- `end_date` - End date for historical data
+
+**Response with Forecasting:**
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "timestamp": "2025-10-28T00:00:00.000Z",
+      "region": "North Coast",
+      "sensor_id": "NOR-WQ-001",
+      "temperature": 22.5,
+      "pH": 7.8,
+      "turbidity": 1.2,
+      "region_avg_quality_index": 85.3
+    }
+  ],
+  "forecast_quality_index": [
+    {
+      "date": "2025-10-29",
+      "quality_index": 84.2,
+      "day_offset": 1,
+      "confidence_interval": {
+        "lower": 79.1,
+        "upper": 89.3,
+        "confidence_level": 0.95
+      }
+    }
+  ],
+  "trend": "stable",
+  "forecast_summary": {
+    "current_quality_index": 85.3,
+    "average_forecast": 82.1,
+    "expected_change": -3.2,
+    "confidence": 0.87
+  }
+}
+```
+
+**Key Features:**
+- **7-Day Forecasting**: Predicts water quality for the next week
+- **Trend Analysis**: Automatic detection of improving/stable/declining trends
+- **Confidence Intervals**: Statistical bounds for forecast accuracy
+- **Caching**: 1-hour cache for improved performance
+- **Regional Support**: Forecasts for specific regions or overall
 
 ### Water Usage API
 
