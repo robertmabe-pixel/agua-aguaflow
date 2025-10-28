@@ -36,15 +36,16 @@ const WaterQualityExample = () => {
         />
       </section>
 
-      {/* Advanced Configuration */}
+      {/* Advanced Configuration with Forecasting */}
       <section>
-        <h2>Advanced Configuration</h2>
+        <h2>Advanced Configuration with Forecasting</h2>
         <WaterQualityAPI
           apiEndpoint="/api/water-quality/advanced"
           refreshInterval={60000} // 1 minute
           autoRefresh={true}
           showFilters={true}
           showBatchSummaries={true}
+          enableForecasting={true}
           defaultRegion="North Coast"
           defaultDateRange={{
             start: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 7 days ago
@@ -82,13 +83,39 @@ const WaterQualityExample = () => {
         </div>
       </section>
 
+      {/* Forecasting Only Example */}
+      <section>
+        <h2>Predictive Water Quality Forecasting</h2>
+        <div className="forecasting-example">
+          <div className="forecasting-header">
+            <h3>7-Day Water Quality Forecast</h3>
+            <p>Predictive analytics for proactive water quality management</p>
+          </div>
+          
+          <WaterQualityAPI
+            apiEndpoint="/api/water-quality"
+            enableForecasting={true}
+            showFilters={true}
+            showBatchSummaries={false}
+            defaultRegion="Central Valley"
+            onDataUpdate={(data) => {
+              console.log('Forecast data:', data.forecast);
+              // Process forecast data for alerts, planning, etc.
+              if (data.forecast && data.forecast.trend === 'declining') {
+                console.warn('Water quality declining trend detected!');
+              }
+            }}
+          />
+        </div>
+      </section>
+
       {/* Integration Example */}
       <section>
         <h2>Integration with Dashboard</h2>
         <div className="dashboard-integration">
           <div className="dashboard-header">
             <h3>Environmental Monitoring Dashboard</h3>
-            <p>Real-time water quality monitoring across all regions</p>
+            <p>Real-time water quality monitoring with forecasting across all regions</p>
           </div>
           
           <WaterQualityAPI
@@ -96,9 +123,13 @@ const WaterQualityExample = () => {
             refreshInterval={30000} // 30 seconds
             showFilters={true}
             showBatchSummaries={true}
+            enableForecasting={true}
             onDataUpdate={(data) => {
               console.log('Dashboard data update:', data);
               // Update dashboard metrics, send alerts, etc.
+              if (data.forecast) {
+                console.log('Forecast trend:', data.forecast.trend);
+              }
             }}
             onError={(error) => {
               console.error('Dashboard error:', error);

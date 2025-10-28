@@ -5,6 +5,7 @@ import BatchSummaryDisplay from './components/BatchSummaryDisplay';
 import { useWaterQualityFilters } from './hooks/useWaterQualityFilters';
 import { aggregateSensorData } from './utils/dataAggregator';
 import { generateBatchSummaries } from './utils/batchSummaryGenerator';
+import { generateWaterQualityForecast, forecastCache } from './utils/forecastingEngine';
 import { mockWaterQualityData } from './mockData/waterQualityMockData';
 import './WaterQualityAPI.css';
 
@@ -26,6 +27,7 @@ import './WaterQualityAPI.css';
  * @param {Function} props.onError - Callback when an error occurs
  * @param {boolean} props.showFilters - Show/hide filter controls
  * @param {boolean} props.showBatchSummaries - Show/hide batch summaries
+ * @param {boolean} props.enableForecasting - Enable/disable forecasting functionality
  * @param {string} props.defaultRegion - Default region filter
  * @param {Object} props.defaultDateRange - Default date range filter
  */
@@ -37,6 +39,7 @@ const WaterQualityAPI = ({
   onError = null,
   showFilters = true,
   showBatchSummaries = true,
+  enableForecasting = true,
   defaultRegion = 'all',
   defaultDateRange = { start: null, end: null },
   className = '',
@@ -46,6 +49,7 @@ const WaterQualityAPI = ({
   const [data, setData] = useState([]);
   const [aggregatedData, setAggregatedData] = useState(null);
   const [batchSummaries, setBatchSummaries] = useState([]);
+  const [forecastData, setForecastData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [lastUpdated, setLastUpdated] = useState(null);
@@ -84,6 +88,11 @@ const WaterQualityAPI = ({
         queryParams.append('end_date', filters.dateRange.end);
       }
 
+      // Add forecast parameter if forecasting is enabled
+      if (enableForecasting) {
+        queryParams.append('forecast', 'true');
+      }
+
       const url = `${apiEndpoint}${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
 
       // In development, use mock data
@@ -119,6 +128,24 @@ const WaterQualityAPI = ({
         // Generate batch summaries
         const summaries = generateBatchSummaries(filteredData, 'daily');
         setBatchSummaries(summaries);
+
+        // Generate forecast if enabled
+        let forecast = null;
+        if (enableForecasting) {
+          // Check cache first
+          const cacheKey = filters.region && filters.region !== 'all' ? filters.region : null;
+          const cachedForecast = forecastCache.get(cacheKey, filters);
+          
+          if (cachedForecast) {
+            forecast = cachedForecast;
+          } else {
+            forecast = generateWaterQualityForecast(filteredData, cacheKey);
+            if (forecast.success) {
+              forecastCache.set(cacheKey, forecast, filters);
+            }
+          }
+          setForecastData(forecast);
+        }
         
         setLastUpdated(new Date());
         
@@ -127,7 +154,8 @@ const WaterQualityAPI = ({
           onDataUpdate({
             rawData: filteredData,
             aggregatedData: aggregated,
-            batchSummaries: summaries
+            batchSummaries: summaries,
+            forecast: forecast
           });
         }
         
@@ -157,6 +185,35 @@ const WaterQualityAPI = ({
       // Generate batch summaries
       const summaries = generateBatchSummaries(result.data, 'daily');
       setBatchSummaries(summaries);
+
+      // Handle forecast data from API response or generate locally
+      let forecast = null;
+      if (enableForecasting) {
+        if (result.forecast_quality_index && result.trend) {
+          // Use forecast data from API response
+          forecast = {
+            success: true,
+            forecast_quality_index: result.forecast_quality_index,
+            trend: result.trend,
+            summary: result.forecast_summary || {},
+            metadata: result.forecast_metadata || {}
+          };
+        } else {
+          // Generate forecast locally if not provided by API
+          const cacheKey = filters.region && filters.region !== 'all' ? filters.region : null;
+          const cachedForecast = forecastCache.get(cacheKey, filters);
+          
+          if (cachedForecast) {
+            forecast = cachedForecast;
+          } else {
+            forecast = generateWaterQualityForecast(result.data, cacheKey);
+            if (forecast.success) {
+              forecastCache.set(cacheKey, forecast, filters);
+            }
+          }
+        }
+        setForecastData(forecast);
+      }
       
       setLastUpdated(new Date());
       
@@ -165,7 +222,8 @@ const WaterQualityAPI = ({
         onDataUpdate({
           rawData: result.data,
           aggregatedData: aggregated,
-          batchSummaries: summaries
+          batchSummaries: summaries,
+          forecast: forecast
         });
       }
       
@@ -323,6 +381,78 @@ const WaterQualityAPI = ({
           </div>
         )}
 
+        {/* Water Quality Forecast */}
+        {enableForecasting && forecastData && forecastData.success && (
+          <div className="forecast-section">
+            <h3>7-Day Water Quality Forecast</h3>
+            <div className="forecast-summary">
+              <div className="forecast-trend">
+                <h4>Trend Analysis</h4>
+                <div className={`trend-indicator ${forecastData.trend}`}>
+                  <span className="trend-icon">
+                    {forecastData.trend === 'improving' ? '📈' : 
+                     forecastData.trend === 'declining' ? '📉' : '➡️'}
+                  </span>
+                  <span className="trend-text">
+                    {forecastData.trend === 'improving' ? 'Improving' : 
+                     forecastData.trend === 'declining' ? 'Declining' : 'Stable'}
+                  </span>
+                </div>
+                {forecastData.summary && (
+                  <div className="forecast-stats">
+                    <p>Current: <strong>{forecastData.summary.current_quality_index?.toFixed(1)}</strong></p>
+                    <p>7-day avg: <strong>{forecastData.summary.average_forecast?.toFixed(1)}</strong></p>
+                    <p>Expected change: <strong>{forecastData.summary.expected_change > 0 ? '+' : ''}{forecastData.summary.expected_change?.toFixed(1)}</strong></p>
+                  </div>
+                )}
+              </div>
+            </div>
+            
+            <div className="forecast-chart">
+              <h4>Daily Forecast</h4>
+              <div className="forecast-timeline">
+                {forecastData.forecast_quality_index.map((forecast, index) => (
+                  <div key={index} className="forecast-day">
+                    <div className="forecast-date">
+                      {new Date(forecast.date).toLocaleDateString('en-US', { 
+                        weekday: 'short', 
+                        month: 'short', 
+                        day: 'numeric' 
+                      })}
+                    </div>
+                    <div className="forecast-value">
+                      <div 
+                        className={`quality-bar ${
+                          forecast.quality_index >= 80 ? 'excellent' :
+                          forecast.quality_index >= 60 ? 'good' :
+                          forecast.quality_index >= 40 ? 'fair' : 'poor'
+                        }`}
+                        style={{ height: `${Math.max(20, forecast.quality_index)}%` }}
+                      ></div>
+                      <span className="quality-number">{forecast.quality_index}</span>
+                    </div>
+                    {forecast.confidence_interval && (
+                      <div className="confidence-range">
+                        ±{(forecast.confidence_interval.upper - forecast.confidence_interval.lower).toFixed(1)}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {forecastData.metadata && (
+              <div className="forecast-metadata">
+                <small>
+                  Generated: {new Date(forecastData.metadata.generated_at).toLocaleString()} | 
+                  Model: {forecastData.metadata.algorithm} | 
+                  Data points: {forecastData.summary?.data_points_used}
+                </small>
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Batch Summaries */}
         {showBatchSummaries && batchSummaries.length > 0 && (
           <BatchSummaryDisplay
@@ -408,6 +538,8 @@ WaterQualityAPI.propTypes = {
   showFilters: PropTypes.bool,
   /** Show/hide batch summaries */
   showBatchSummaries: PropTypes.bool,
+  /** Enable/disable forecasting functionality */
+  enableForecasting: PropTypes.bool,
   /** Default region filter */
   defaultRegion: PropTypes.string,
   /** Default date range filter */
